@@ -16,19 +16,20 @@
         android:lines="1"
         android:maxLines="1"
         android:singleLine="true"
-        app:layout_constraintBottom_toTopOf="@+id/checkWetherBtn"
+        app:layout_constraintBottom_toTopOf="@+id/checkWeatherBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/checkWetherBtn"
+        android:id="@+id/checkWeatherBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
         android:text="Check the weather"
+        android:onClick="checkingWeather"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
