@@ -18,6 +18,54 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:id="@+id/secondLinearMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearCity"
+                android:layout_width="250dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLogoHour"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/verticalLogoHour"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/wCheckerLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="125dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/wCheckerLogo" />
+
+                    <TextView
+                        android:id="@+id/hourText"
+                        android:layout_width="match_parent"
+                        android:layout_height="37dp"
+                        android:layout_weight="1"
+                        android:text="7:54"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/black"
+                        android:textSize="30sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -111,16 +159,57 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearTempMinMax"
-        android:layout_width="395dp"
+        android:id="@+id/linearTempMin"
+        android:layout_width="195dp"
         android:layout_height="90dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearHum">
+
+        <TextView
+            android:id="@+id/minTempText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Temp min"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/minTempSetText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearTempMax"
+        android:layout_width="195dp"
+        android:layout_height="90dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearHum"></LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/linearHum">
+
+        <TextView
+            android:id="@+id/maxTempText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Temp max"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/maxTempSetText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/black"
+            android:textSize="30sp" />
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
