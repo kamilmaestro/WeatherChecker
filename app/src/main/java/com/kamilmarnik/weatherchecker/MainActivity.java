@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         cityNameText = findViewById(R.id.cityNameText);
     }
 
-
     public void checkingWeather(View view) {
         Intent intent = new Intent(this, WeatherActivity.class);
         String cityName = getCityName();
