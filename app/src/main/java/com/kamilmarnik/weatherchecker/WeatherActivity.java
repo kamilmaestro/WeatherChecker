@@ -9,13 +9,23 @@ import org.w3c.dom.Text;
 
 public class WeatherActivity extends AppCompatActivity {
 
+    private TextView mCityNameText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
-        Intent intent = getIntent();
-        String cityName = intent.getStringExtra(MainActivity.CITY_NAME);
+        mCityNameText = findViewById(R.id.cityNameText);
+        setCityName(getMyIntent());
+    }
 
+    public void setCityName(String cityName){
+        mCityNameText.setText(cityName);
+    }
+
+    public String getMyIntent(){
+        Intent intent = getIntent();
+        return intent.getStringExtra(MainActivity.CITY_NAME);
     }
 }

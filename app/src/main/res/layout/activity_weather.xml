@@ -70,16 +70,15 @@
                     <ImageView
                         android:id="@+id/wCheckerLogo"
                         android:layout_width="match_parent"
-                        android:layout_height="125dp"
+                        android:layout_height="120dp"
                         android:layout_weight="1"
-                        app:srcCompat="@drawable/wCheckerLogo" />
+                        app:srcCompat="@drawable/weather_checker_logo" />
 
                     <TextView
                         android:id="@+id/hourText"
                         android:layout_width="match_parent"
                         android:layout_height="37dp"
                         android:layout_weight="1"
-                        android:text="7:54"
                         android:textAlignment="center"
                         android:textColor="@color/blue"
                         android:textSize="30sp"
