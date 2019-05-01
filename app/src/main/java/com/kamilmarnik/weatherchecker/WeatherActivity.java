@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WeatherActivity extends AppCompatActivity {
 
     public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
-            UNITS = "metric", ERROR = "Error has occurred";
+            UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa", PERCENT = "\u0025";
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
 
@@ -76,7 +76,7 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     public void sendRequest(JsonWeatherAPI jsonWeatherAPI){
-        Call<GetWeather> call = jsonWeatherAPI.getWeather(getCityName(), APP_ID, UNITS);
+        Call<GetWeather> call = jsonWeatherAPI.getWeather(getCityName().concat(",pl"), APP_ID, UNITS);
         call.enqueue(new Callback<GetWeather>() {
             @Override
             public void onResponse(Call<GetWeather> call, Response<GetWeather> response) {
@@ -100,10 +100,10 @@ public class WeatherActivity extends AppCompatActivity {
         GetWeather getWeather = response.body();
         Main main = Objects.requireNonNull(getWeather).getMain();
 
-        mTempText.setText(String.format(Locale.getDefault(), "%.2f", main.getTemp()));
-        mPressText.setText(main.getPressure().toString());
-        mHumText.setText(main.getHumidity().toString());
-        mTempMinText.setText(String.format(Locale.getDefault(), "%.2f", main.getTempMin()));
-        mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f", main.getTempMax()));
+        mTempText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTemp()).concat(CELSIUS));
+        mPressText.setText(String.format(Locale.getDefault(), "%d ", main.getPressure()).concat(HECTOPASCAL));
+        mHumText.setText(String.format(Locale.getDefault(), "%d ", main.getHumidity()).concat(PERCENT));
+        mTempMinText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMin()).concat(CELSIUS));
+        mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMax()).concat(CELSIUS));
     }
 }

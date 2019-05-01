@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         mCheckWeatherBtn = findViewById(R.id.checkWeatherBtn);
         mCityNameText = findViewById(R.id.cityNameText);
         setMaxChars(MAX_CHARS);
-        setRightContent();
+        //setRightContent();
     }
 
     public void setMaxChars(final int MAX_CHARS){
