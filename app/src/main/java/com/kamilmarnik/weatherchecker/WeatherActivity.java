@@ -39,30 +39,7 @@ public class WeatherActivity extends AppCompatActivity {
         mTempMaxText = findViewById(R.id.maxTempSetText);
 
         setCityName(getMyIntent());
-        mHourText.setText(getTime(POLAND_GMT));
-
         openURL();
-    }
-
-    public void setCityName(String cityName){
-        this.cityName = cityName;
-        mCityNameText.setText(cityName);
-    }
-
-    public String getMyIntent(){
-        Intent intent = getIntent();
-        return intent.getStringExtra(MainActivity.CITY_NAME);
-    }
-
-    public String getCityName(){
-        return this.cityName;
-    }
-
-    public String getTime(final String GMT ){
-        TimeZone timeZone =TimeZone.getTimeZone(GMT);
-        Calendar cal = Calendar.getInstance(timeZone);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-        return simpleDateFormat.format(cal.getTime());
     }
 
     public void openURL(){
@@ -81,10 +58,12 @@ public class WeatherActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<GetWeather> call, Response<GetWeather> response) {
                 if(!response.isSuccessful()){
-                    mCityNameText.setText(ERROR);
                     Toast.makeText(WeatherActivity.this, "Code: " + response.code(), Toast.LENGTH_LONG).show();
+                    finish();
                     return;
                 }
+                mCityNameText.setText(getMyIntent());
+                setHour();
                 fillTextViews(response);
             }
 
@@ -94,6 +73,30 @@ public class WeatherActivity extends AppCompatActivity {
                 Toast.makeText(WeatherActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void setCityName(String cityName){
+        this.cityName = cityName;
+    }
+
+    public String getCityName(){
+        return this.cityName;
+    }
+
+    public String getMyIntent(){
+        Intent intent = getIntent();
+        return intent.getStringExtra(MainActivity.CITY_NAME);
+    }
+
+    public void setHour(){
+        mHourText.setText(getTime(POLAND_GMT));
+    }
+
+    public String getTime(final String GMT ){
+        TimeZone timeZone =TimeZone.getTimeZone(GMT);
+        Calendar cal = Calendar.getInstance(timeZone);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        return simpleDateFormat.format(cal.getTime());
     }
 
     public void fillTextViews(Response<GetWeather> response){

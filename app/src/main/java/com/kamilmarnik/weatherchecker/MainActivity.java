@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String CITY_NAME = "CITY_NAME", SPACE = " ", ACCEPTABLE_CHARS = "[a-zA-Z]+", EMPTY_STRING = "";
+    public static final String CITY_NAME = "CITY_NAME", SPACE = " ", ACCEPTABLE_CHARS = "[^\\W\\d]*", EMPTY_STRING = "";
     public static final int MAX_CHARS = 30;
     private Button mCheckWeatherBtn;
     private EditText mCityNameText;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         mCheckWeatherBtn = findViewById(R.id.checkWeatherBtn);
         mCityNameText = findViewById(R.id.cityNameText);
         setMaxChars(MAX_CHARS);
-        //setRightContent();
+        setRightContent();
     }
 
     public void setMaxChars(final int MAX_CHARS){
