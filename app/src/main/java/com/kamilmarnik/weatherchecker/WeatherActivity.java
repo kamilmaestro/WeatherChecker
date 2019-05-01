@@ -6,13 +6,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -44,31 +41,7 @@ public class WeatherActivity extends AppCompatActivity {
         setCityName(getMyIntent());
         mHourText.setText(getTime(POLAND_GMT));
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.openweathermap.org/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        JsonWeatherAPI jsonWeatherAPI = retrofit.create(JsonWeatherAPI.class);
-        Call<GetWeather> call = jsonWeatherAPI.getWeather(getCityName(), APP_ID, UNITS);
-        call.enqueue(new Callback<GetWeather>() {
-            @Override
-            public void onResponse(Call<GetWeather> call, Response<GetWeather> response) {
-                if(!response.isSuccessful()){
-                    mCityNameText.setText(ERROR);
-                    Toast.makeText(WeatherActivity.this, "Code: " + response.code(), Toast.LENGTH_LONG).show();
-                    return;
-                }
-                Main main = new Main();
-                System.out.println(main.getPressure());
-            }
-
-            @Override
-            public void onFailure(Call<GetWeather> call, Throwable t) {
-                mCityNameText.setText(ERROR);
-                Toast.makeText(WeatherActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        openURL();
     }
 
     public void setCityName(String cityName){
@@ -90,5 +63,47 @@ public class WeatherActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance(timeZone);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
         return simpleDateFormat.format(cal.getTime());
+    }
+
+    public void openURL(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://api.openweathermap.org")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        JsonWeatherAPI jsonWeatherAPI = retrofit.create(JsonWeatherAPI.class);
+        sendRequest(jsonWeatherAPI);
+    }
+
+    public void sendRequest(JsonWeatherAPI jsonWeatherAPI){
+        Call<GetWeather> call = jsonWeatherAPI.getWeather(getCityName(), APP_ID, UNITS);
+        call.enqueue(new Callback<GetWeather>() {
+            @Override
+            public void onResponse(Call<GetWeather> call, Response<GetWeather> response) {
+                if(!response.isSuccessful()){
+                    mCityNameText.setText(ERROR);
+                    Toast.makeText(WeatherActivity.this, "Code: " + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                fillTextViews(response);
+            }
+
+            @Override
+            public void onFailure(Call<GetWeather> call, Throwable t) {
+                mCityNameText.setText(ERROR);
+                Toast.makeText(WeatherActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void fillTextViews(Response<GetWeather> response){
+        GetWeather getWeather = response.body();
+        Main main = Objects.requireNonNull(getWeather).getMain();
+
+        mTempText.setText(String.format(Locale.getDefault(), "%.2f", main.getTemp()));
+        mPressText.setText(main.getPressure().toString());
+        mHumText.setText(main.getHumidity().toString());
+        mTempMinText.setText(String.format(Locale.getDefault(), "%.2f", main.getTempMin()));
+        mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f", main.getTempMax()));
     }
 }
