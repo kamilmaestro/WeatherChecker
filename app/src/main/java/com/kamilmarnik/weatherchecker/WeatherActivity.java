@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -22,7 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class WeatherActivity extends AppCompatActivity {
 
-    public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864", UNITS = "metric", ERROR = "Error has occured";
+    public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
+            UNITS = "metric", ERROR = "Error has occurred";
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
 
@@ -52,7 +54,13 @@ public class WeatherActivity extends AppCompatActivity {
         call.enqueue(new Callback<GetWeather>() {
             @Override
             public void onResponse(Call<GetWeather> call, Response<GetWeather> response) {
-
+                if(!response.isSuccessful()){
+                    mCityNameText.setText(ERROR);
+                    Toast.makeText(WeatherActivity.this, "Code: " + response.code(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                Main main = new Main();
+                System.out.println(main.getPressure());
             }
 
             @Override
