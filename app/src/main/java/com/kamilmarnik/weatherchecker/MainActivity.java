@@ -1,6 +1,7 @@
 package com.kamilmarnik.weatherchecker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -18,7 +19,8 @@ import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String CITY_NAME = "CITY_NAME", SPACE = " ", ACCEPTABLE_CHARS = "[^\\W\\d]*", EMPTY_STRING = "";
+    public static final String CITY_NAME = "CITY_NAME", SPACE = " ", ACCEPTABLE_CHARS = "[^\\W\\d]*",
+            EMPTY_STRING = "", DEFAULT_VAL = "Default";
     public static final int MAX_CHARS = 30;
     private Button mCheckWeatherBtn;
     private EditText mCityNameText;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         mCityNameText = findViewById(R.id.cityNameText);
         setMaxChars(MAX_CHARS);
         setRightContent();
+        loadData();
     }
 
     public void setMaxChars(final int MAX_CHARS){
@@ -59,11 +62,25 @@ public class MainActivity extends AppCompatActivity {
     public void checkingWeather(View view) {
         Intent intent = new Intent(this, WeatherActivity.class);
         String cityName = getCityName();
+        saveData(cityName);
         intent.putExtra(CITY_NAME, cityName);
         startActivity(intent);
     }
 
     public String getCityName(){
         return mCityNameText.getText().toString();
+    }
+
+    public void saveData(String cityName){
+        SharedPreferences savedCityName = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = savedCityName.edit();
+        editor.putString(CITY_NAME, cityName);
+        editor.apply();
+    }
+
+    public void loadData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        String cityName = sharedPreferences.getString(CITY_NAME, DEFAULT_VAL);
+        mCityNameText.setText(cityName);
     }
 }
