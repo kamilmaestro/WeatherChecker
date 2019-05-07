@@ -7,12 +7,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONStringer;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -32,7 +26,7 @@ public class WeatherActivity extends AppCompatActivity {
     public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
             UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa",
             PERCENT = "\u0025";
-    private static final int ONE_MINUTE = 60000;
+    private static final int FIVE_MINUTES = 300000;
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
 
@@ -51,7 +45,8 @@ public class WeatherActivity extends AppCompatActivity {
 
         setCityName(getMyIntent());
         openURL();
-        refreshing();
+        manualRefreshing();
+        autoRefreshData(WeatherActivity.this);
     }
 
     public void openURL(){
@@ -122,7 +117,7 @@ public class WeatherActivity extends AppCompatActivity {
         mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMax()).concat(CELSIUS));
     }
 
-    public void refreshing(){
+    public void manualRefreshing(){
         final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -130,6 +125,25 @@ public class WeatherActivity extends AppCompatActivity {
                 openURL();
                 Toast.makeText(WeatherActivity.this, "Page was refreshed", Toast.LENGTH_LONG).show();
                 pullToRefresh.setRefreshing(false);
+            }
+        });
+    }
+
+    public void autoRefreshData(final WeatherActivity weatherActivity){
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                openURL();
+                handleMessage(weatherActivity);
+            }
+        }, 0, FIVE_MINUTES);
+    }
+
+    public void handleMessage(WeatherActivity weatherActivity){
+        weatherActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(WeatherActivity.this, "Page was automatically refreshed", Toast.LENGTH_SHORT).show();
             }
         });
     }
