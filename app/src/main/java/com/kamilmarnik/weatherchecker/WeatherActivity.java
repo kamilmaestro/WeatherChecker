@@ -1,6 +1,7 @@
 package com.kamilmarnik.weatherchecker;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +30,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WeatherActivity extends AppCompatActivity {
 
     public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
-            UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa", PERCENT = "\u0025";
+            UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa",
+            PERCENT = "\u0025";
+    private static final int ONE_MINUTE = 60000;
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
 
@@ -46,6 +51,7 @@ public class WeatherActivity extends AppCompatActivity {
 
         setCityName(getMyIntent());
         openURL();
+        refreshing();
     }
 
     public void openURL(){
@@ -114,5 +120,17 @@ public class WeatherActivity extends AppCompatActivity {
         mHumText.setText(String.format(Locale.getDefault(), "%d ", main.getHumidity()).concat(PERCENT));
         mTempMinText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMin()).concat(CELSIUS));
         mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMax()).concat(CELSIUS));
+    }
+
+    public void refreshing(){
+        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                openURL();
+                Toast.makeText(WeatherActivity.this, "Page was refreshed", Toast.LENGTH_LONG).show();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
     }
 }
