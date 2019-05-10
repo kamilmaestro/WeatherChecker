@@ -43,10 +43,15 @@ public class WeatherActivity extends AppCompatActivity {
         mTempMinText = findViewById(R.id.minTempSetText);
         mTempMaxText = findViewById(R.id.maxTempSetText);
 
+        checkInternet();
         setCityName(getMyIntent());
         openURL();
         manualRefreshing();
         autoRefreshData(WeatherActivity.this);
+    }
+
+    public void checkInternet(){
+        InternetConnection internetConnection = new InternetConnection();
     }
 
     public void openURL(){
