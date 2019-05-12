@@ -1,21 +1,23 @@
 package com.kamilmarnik.weatherchecker;
 
-import java.io.IOException;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 
 public class InternetConnection {
-    private boolean isOnline;
+    private Context context;
 
-    public InternetConnection(){}
-
-    public InternetConnection(boolean isOnline){
-        this.isOnline = isOnline;
+    public InternetConnection(Context context){
+        this.context = context;
     }
 
-    public boolean isOnline() {
-        return isOnline;
-    }
-
-    public void setOnline(boolean online) {
-        isOnline = online;
+    public boolean isOnline(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if(activeNetwork != null && activeNetwork.isConnected())
+            return true;
+        else
+            return false;
     }
 }
