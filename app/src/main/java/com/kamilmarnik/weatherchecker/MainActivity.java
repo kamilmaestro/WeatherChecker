@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CITY_NAME = "CITY_NAME", SPACE = " ", ACCEPTABLE_CHARS = "[^\\W\\d]*",
             EMPTY_STRING = "", DEFAULT_VAL = "Default";
-    public static final int MAX_CHARS = 30, ONE_MINUTE = 10000;
+    public static final int MAX_CHARS = 30, ONE_MINUTE = 60000;
     private Button mCheckWeatherBtn;
     private EditText mCityNameText;
 

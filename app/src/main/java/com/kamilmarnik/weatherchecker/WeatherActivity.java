@@ -28,7 +28,7 @@ public class WeatherActivity extends AppCompatActivity {
     public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
             UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa",
             PERCENT = "\u0025";
-    private static final int FIVE_MINUTES = 300000, ONE_MINUTE = 10000;
+    private static final int FIVE_MINUTES = 300000, ONE_MINUTE = 60000;
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
 
