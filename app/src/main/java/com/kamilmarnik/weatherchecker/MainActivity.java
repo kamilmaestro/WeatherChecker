@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String CITY_NAME = "CITY_NAME", SPACE = " ", ACCEPTABLE_CHARS = "[^\\W\\d]*",
             EMPTY_STRING = "", DEFAULT_VAL = "Default";
-    public static final int MAX_CHARS = 30, ONE_MINUTE = 60000;
+    public static final int MAX_CHARS = 30, ONE_MINUTE = 10000;
     private Button mCheckWeatherBtn;
     private EditText mCityNameText;
 
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setMaxChars(MAX_CHARS);
         setRightContent();
         loadData();
-        checkingInternet(ONE_MINUTE);
+        checkingInternet(ONE_MINUTE, MainActivity.this);
     }
 
     public void setMaxChars(final int MAX_CHARS){
@@ -85,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
         mCityNameText.setText(cityName);
     }
 
-    public void checkingInternet(int period){
+    public void checkingInternet(int period, Context context){
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                isConnected(MainActivity.this);
+                isConnected(context);
             }
         }, 0, period);
     }
@@ -97,21 +97,28 @@ public class MainActivity extends AppCompatActivity {
     public boolean isConnected(Context context) {
         InternetConnection internetConnection = new InternetConnection(context);
         if (!internetConnection.isOnline()) {
-            handleMessage(false);
+            handleMessage(false, context);
             return false;
         } else {
-            handleMessage(true);
+            handleMessage(true, context);
             return true;
         }
     }
 
-    public void handleMessage(boolean statement){
+    public void handleMessage(boolean statement, Context context){
         MainActivity.this.runOnUiThread(() -> {
             if(!statement){
-                mCheckWeatherBtn.setEnabled(false);
-                Toast.makeText(MainActivity.this, "Internet connection required", Toast.LENGTH_SHORT).show();
-            }else
-                mCheckWeatherBtn.setEnabled(true);
+                Toast.makeText(context, "Internet connection required", Toast.LENGTH_SHORT).show();
+                if(context.equals(MainActivity.this)){
+                    mCheckWeatherBtn.setEnabled(false);
+                }
+            }else {
+                if(context.equals(MainActivity.this)) {
+                    mCheckWeatherBtn.setEnabled(true);
+                }else {
+                    ((WeatherActivity)context).refreshData();
+                }
+            }
         });
     }
 }

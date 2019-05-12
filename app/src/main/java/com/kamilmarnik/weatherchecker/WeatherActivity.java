@@ -1,5 +1,6 @@
 package com.kamilmarnik.weatherchecker;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,7 +28,7 @@ public class WeatherActivity extends AppCompatActivity {
     public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
             UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa",
             PERCENT = "\u0025";
-    private static final int FIVE_MINUTES = 300000;
+    private static final int FIVE_MINUTES = 300000, ONE_MINUTE = 10000;
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
 
@@ -47,7 +48,7 @@ public class WeatherActivity extends AppCompatActivity {
         setCityName(getMyIntent());
         openURL();
         manualRefreshing();
-        autoRefreshData(WeatherActivity.this);
+        new MainActivity().checkingInternet(ONE_MINUTE, WeatherActivity.this);
     }
 
     public void openURL(){
@@ -129,6 +130,14 @@ public class WeatherActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void refreshData(){
+        openURL();
+        Toast.makeText(this, "Auto refresh", Toast.LENGTH_SHORT).show();
+    }
+
+
+    //TO DELETE
 
     public void autoRefreshData(final WeatherActivity weatherActivity){
         new Timer().scheduleAtFixedRate(new TimerTask() {
