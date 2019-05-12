@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pullToRefresh"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".WeatherActivity">
@@ -99,14 +100,11 @@
 
     <LinearLayout
         android:id="@+id/linearTemp"
-        android:layout_width="395dp"
+        android:layout_width="200dp"
         android:layout_height="90dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearMain">
 
@@ -239,6 +237,23 @@
             android:layout_height="match_parent"
             android:textColor="@android:color/black"
             android:textSize="30sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearImage"
+        android:layout_width="187dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearMain">
+
+        <ImageView
+            android:id="@+id/weatherIcon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:srcCompat="?attr/colorBackgroundFloating" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -3,9 +3,13 @@ package com.kamilmarnik.weatherchecker;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +35,7 @@ public class WeatherActivity extends AppCompatActivity {
     private static final int FIVE_MINUTES = 300000, ONE_MINUTE = 60000;
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
+    private ImageView mWeatherIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class WeatherActivity extends AppCompatActivity {
         mHumText = findViewById(R.id.humSetText);
         mTempMinText = findViewById(R.id.minTempSetText);
         mTempMaxText = findViewById(R.id.maxTempSetText);
+        mWeatherIcon = findViewById(R.id.weatherIcon);
 
         setCityName(getMyIntent());
         openURL();
@@ -109,14 +115,19 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     public void fillTextViews(Response<GetWeather> response){
-        GetWeather getWeather = response.body();
-        Main main = Objects.requireNonNull(getWeather).getMain();
+        GetWeather getMainWeather = response.body();
+        Main main = Objects.requireNonNull(getMainWeather).getMain();
+        Weather[] weather = getMainWeather.getWeather().toArray(new Weather[0]);
 
         mTempText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTemp()).concat(CELSIUS));
         mPressText.setText(String.format(Locale.getDefault(), "%d ", main.getPressure()).concat(HECTOPASCAL));
         mHumText.setText(String.format(Locale.getDefault(), "%d ", main.getHumidity()).concat(PERCENT));
         mTempMinText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMin()).concat(CELSIUS));
         mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMax()).concat(CELSIUS));
+        int resID = getResources().getIdentifier("icon".concat(weather[0].getIcon()), "drawable", getPackageName());
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), resID);
+        mWeatherIcon.setImageDrawable(drawable);
+
     }
 
     public void manualRefreshing(){
