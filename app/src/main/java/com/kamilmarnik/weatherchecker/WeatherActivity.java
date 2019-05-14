@@ -1,9 +1,6 @@
 package com.kamilmarnik.weatherchecker;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,7 +29,7 @@ public class WeatherActivity extends AppCompatActivity {
     public static final String POLAND_GMT = "GMT+1", APP_ID = "749561a315b14523a8f5f1ef95e45864",
             UNITS = "metric", ERROR = "Error has occurred", CELSIUS = "\u2103", HECTOPASCAL = "hPa",
             PERCENT = "\u0025";
-    private static final int FIVE_MINUTES = 300000, ONE_MINUTE = 60000;
+    private static final int ONE_MINUTE = 60000;
     private String cityName;
     private TextView mCityNameText, mHourText, mTempText, mPressText, mHumText, mTempMinText, mTempMaxText;
     private ImageView mWeatherIcon;
@@ -68,10 +65,10 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     public void sendRequest(JsonWeatherAPI jsonWeatherAPI){
-        Call<GetWeather> call = jsonWeatherAPI.getWeather(getCityName().concat(",pl"), APP_ID, UNITS);
-        call.enqueue(new Callback<GetWeather>() {
+        Call<JSON> call = jsonWeatherAPI.getWeather(getCityName().concat(",pl"), APP_ID, UNITS);
+        call.enqueue(new Callback<JSON>() {
             @Override
-            public void onResponse(Call<GetWeather> call, Response<GetWeather> response) {
+            public void onResponse(Call<JSON> call, Response<JSON> response) {
                 if(!response.isSuccessful()){
                     Toast.makeText(WeatherActivity.this, "Code: " + response.code(), Toast.LENGTH_LONG).show();
                     finish();
@@ -83,7 +80,7 @@ public class WeatherActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GetWeather> call, Throwable t) {
+            public void onFailure(Call<JSON> call, Throwable t) {
                 mCityNameText.setText(ERROR);
                 Toast.makeText(WeatherActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
@@ -114,58 +111,36 @@ public class WeatherActivity extends AppCompatActivity {
         return simpleDateFormat.format(cal.getTime());
     }
 
-    public void fillTextViews(Response<GetWeather> response){
-        GetWeather getMainWeather = response.body();
-        Main main = Objects.requireNonNull(getMainWeather).getMain();
-        Weather[] weather = getMainWeather.getWeather().toArray(new Weather[0]);
+    public void fillTextViews(Response<JSON> response){
+        JSON getJSON = response.body();
+        Main main = Objects.requireNonNull(getJSON).getMain();
 
         mTempText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTemp()).concat(CELSIUS));
         mPressText.setText(String.format(Locale.getDefault(), "%d ", main.getPressure()).concat(HECTOPASCAL));
         mHumText.setText(String.format(Locale.getDefault(), "%d ", main.getHumidity()).concat(PERCENT));
         mTempMinText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMin()).concat(CELSIUS));
         mTempMaxText.setText(String.format(Locale.getDefault(), "%.2f ", main.getTempMax()).concat(CELSIUS));
+        setWeatherIcon(getJSON);
+    }
+
+    public void setWeatherIcon(JSON getJSON){
+        Weather[] weather = getJSON.getWeather().toArray(new Weather[0]);
         int resID = getResources().getIdentifier("icon".concat(weather[0].getIcon()), "drawable", getPackageName());
         Drawable drawable = ContextCompat.getDrawable(getApplicationContext(), resID);
         mWeatherIcon.setImageDrawable(drawable);
-
     }
 
     public void manualRefreshing(){
         final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                openURL();
-                Toast.makeText(WeatherActivity.this, "Page was refreshed", Toast.LENGTH_LONG).show();
-                pullToRefresh.setRefreshing(false);
-            }
+        pullToRefresh.setOnRefreshListener(() -> {
+            openURL();
+            Toast.makeText(WeatherActivity.this, "Page was refreshed", Toast.LENGTH_LONG).show();
+            pullToRefresh.setRefreshing(false);
         });
     }
 
     public void refreshData(){
         openURL();
         Toast.makeText(this, "Auto refresh", Toast.LENGTH_SHORT).show();
-    }
-
-
-    //TO DELETE
-
-    public void autoRefreshData(final WeatherActivity weatherActivity){
-        new Timer().scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                openURL();
-                handleMessage(weatherActivity);
-            }
-        }, 0, FIVE_MINUTES);
-    }
-
-    public void handleMessage(WeatherActivity weatherActivity){
-        weatherActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(WeatherActivity.this, "Page was automatically refreshed", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

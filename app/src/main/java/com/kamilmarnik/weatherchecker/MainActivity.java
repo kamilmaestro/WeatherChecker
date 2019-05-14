@@ -44,17 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void setRightContent(){
         mCityNameText.setFilters(new InputFilter[]{
-           new InputFilter() {
-               @Override
-               public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                   if(source.equals(SPACE))
-                       return source;
-                   else if(source.toString().matches(ACCEPTABLE_CHARS))
-                       return source;
-                   else
-                       return EMPTY_STRING;
-               }
-           }
+                (source, start, end, dest, dstart, dend) -> {
+                    if(source.equals(SPACE))
+                        return source;
+                    else if(source.toString().matches(ACCEPTABLE_CHARS))
+                        return source;
+                    else
+                        return EMPTY_STRING;
+                }
         });
     }
 
